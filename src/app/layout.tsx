@@ -1,14 +1,20 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-
+import ThemeProvider from "@/components/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Your Portfolio",
-  description: "My awesome portfolio",
+  title: "Portfolio | Your Name",
+  description: "Creative Developer & Designer Portfolio",
+  keywords: ["portfolio", "developer", "designer", "creative"],
+  authors: [{ name: "Your Name" }],
+  openGraph: {
+    title: "Portfolio | Your Name",
+    description: "Creative Developer & Designer Portfolio",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -17,11 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {/* <Providers> */}
-          {children}
-        {/* </Providers> */}
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className="relative">{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

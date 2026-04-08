@@ -1,82 +1,137 @@
-// components/layout/NavBar.tsx (Simpler version)
 "use client";
 
-import { Button, Link } from "@heroui/react";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { 
+  Button,
+  Link
+} from "@heroui/react";
+import { useTheme } from "next-themes";
+import { FiGithub, FiLinkedin, FiTwitter } from "react-icons/fi";
+import MobileNav from "../MobileNav";
+import ThemeSwitcher from "../theme-switcher";
+import useMounted from "@/hooks/useMounted";
 
-export default function NavBar() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function NavbarComponent() {
+  const [scrolled, setScrolled] = useState(false);
+  const mounted = useMounted();
+  const { resolvedTheme } = useTheme();
 
-  const menuItems = [
-    { name: "Home", href: "#" },
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navItems = [
+    { name: "Home", href: "#home" },
     { name: "Projects", href: "#projects" },
-    { name: "Skills", href: "#skills" },
     { name: "Contact", href: "#contact" },
   ];
 
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-default-200">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="#" className="font-bold text-xl bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-            PORTFOLIO
-          </Link>
+  const getNavbarStyles = () => {
+    const isDark = resolvedTheme === "dark";
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
-            {menuItems.map((item) => (
+    if (!mounted) return "bg-transparent";
+    
+    if (scrolled) {
+      return isDark
+        ? "bg-black/80 backdrop-blur-xl border-b border-white/10"
+        : "bg-white/80 backdrop-blur-xl border-b border-gray-200";
+    }
+    return "bg-transparent";
+  };
+
+  const getLinkStyles = () => {
+    return resolvedTheme === "dark"
+      ? "text-gray-300 hover:text-white"
+      : "text-gray-600 hover:text-gray-900";
+  };
+
+  const getButtonStyles = () => {
+    return resolvedTheme === "dark"
+      ? "text-gray-300 hover:text-white"
+      : "text-gray-600 hover:text-gray-900";
+  };
+
+  if (!mounted) return null;
+
+  return (
+    <motion.div
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <header
+        className={`fixed top-0 z-50 w-full transition-all duration-300 ${getNavbarStyles()}`}
+      >
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link href="/" className="text-2xl font-bold">
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                Portfolio.
+              </span>
+            </Link>
+          </motion.div>
+
+          <div className="hidden md:flex gap-8 justify-self-center">
+          {navItems.map((item) => (
+            <div key={item.name}>
               <Link
-                key={item.name}
                 href={item.href}
-                className="text-default-600 hover:text-primary-500 transition-colors"
+                className={`${getLinkStyles()} transition-colors no-underline hover:underline decoration-cyan-400`}
               >
                 {item.name}
               </Link>
-            ))}
-            <Button as={Link} href="#contact" color="primary" variant="flat" size="sm">
-              Contact Me
+            </div>
+          ))}
+          </div>
+
+          <div className="hidden md:flex gap-4 justify-self-end">
+            <ThemeSwitcher />
+            <Button
+              isIconOnly
+              variant="light"
+              as={Link}
+              href="https://github.com"
+              target="_blank"
+              className={getButtonStyles()}
+            >
+              <FiGithub className="text-xl" />
+            </Button>
+            <Button
+              isIconOnly
+              variant="light"
+              as={Link}
+              href="https://linkedin.com"
+              target="_blank"
+              className={getButtonStyles()}
+            >
+              <FiLinkedin className="text-xl" />
+            </Button>
+            <Button
+              isIconOnly
+              variant="light"
+              as={Link}
+              href="https://twitter.com"
+              target="_blank"
+              className={getButtonStyles()}
+            >
+              <FiTwitter className="text-xl" />
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-default-600"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden py-4 border-t border-default-200">
-            <div className="flex flex-col space-y-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-default-600 hover:text-primary-500 transition-colors"
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <Button
-                as={Link}
-                href="#contact"
-                color="primary"
-                variant="flat"
-                fullWidth
-                onPress={() => setIsOpen(false)}
-              >
-                Contact Me
-              </Button>
-            </div>
+          <div className="md:hidden flex gap-2 justify-self-end">
+            <ThemeSwitcher />
+            <MobileNav navItems={navItems} />
           </div>
-        )}
-      </div>
-    </nav>
+        </div>
+      </header>
+    </motion.div>
   );
 }

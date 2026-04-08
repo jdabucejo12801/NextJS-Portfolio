@@ -1,6 +1,60 @@
-/* app/globals.css */
-/* Tailwind CSS v4 - Must be first [citation:4] */
 @import "tailwindcss";
-
-/* HeroUI v3 styles - Must be after Tailwind [citation:4] */
 @import "@heroui/styles";
+
+@theme {
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Dark mode (default) */
+  .dark body {
+    background: linear-gradient(135deg, 
+      rgb(17 24 39) 0%, 
+      rgb(17 24 39) 50%, 
+      rgb(0 0 0) 100%
+    );
+  }
+  
+  /* Light mode */
+  .light body {
+    background: linear-gradient(135deg, 
+      rgb(241 245 249) 0%, 
+      rgb(248 250 252) 50%, 
+      rgb(255 255 255) 100%
+    );
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(12px);
+    background: rgb(255 255 255 / 0.05);
+    border: 1px solid rgb(255 255 255 / 0.1);
+  }
+  
+  .light .glass-effect {
+    background: rgb(0 0 0 / 0.05);
+    border: 1px solid rgb(0 0 0 / 0.1);
+  }
+}

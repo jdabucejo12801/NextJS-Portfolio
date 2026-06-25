@@ -73,7 +73,7 @@ export default function NavbarComponent() {
             whileTap={{ scale: 0.95 }}
           >
             <Link href="/" className="text-2xl font-bold">
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                 Portfolio.
               </span>
             </Link>

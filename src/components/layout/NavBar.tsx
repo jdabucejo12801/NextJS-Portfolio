@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
+import {
   Button,
   Link
 } from "@heroui/react";
@@ -35,7 +35,7 @@ export default function NavbarComponent() {
     const isDark = resolvedTheme === "dark";
 
     if (!mounted) return "bg-transparent";
-    
+
     if (scrolled) {
       return isDark
         ? "bg-black/80 backdrop-blur-xl border-b border-white/10"
@@ -80,50 +80,38 @@ export default function NavbarComponent() {
           </motion.div>
 
           <div className="hidden md:flex gap-8 justify-self-center">
-          {navItems.map((item) => (
-            <div key={item.name}>
-              <Link
-                href={item.href}
-                className={`${getLinkStyles()} transition-colors no-underline hover:underline decoration-cyan-400`}
-              >
-                {item.name}
-              </Link>
-            </div>
-          ))}
+            {navItems.map((item) => (
+              <div key={item.name}>
+                <Link
+                  href={item.href}
+                  className={`${getLinkStyles()} transition-colors no-underline hover:underline decoration-cyan-400`}
+                >
+                  {item.name}
+                </Link>
+              </div>
+            ))}
           </div>
 
           <div className="hidden md:flex gap-4 justify-self-end">
             <ThemeSwitcher />
-            <Button
-              isIconOnly
-              variant="light"
-              as={Link}
-              href="https://github.com"
-              target="_blank"
-              className={getButtonStyles()}
-            >
-              <FiGithub className="text-xl" />
-            </Button>
-            <Button
-              isIconOnly
-              variant="light"
-              as={Link}
-              href="https://linkedin.com"
-              target="_blank"
-              className={getButtonStyles()}
-            >
-              <FiLinkedin className="text-xl" />
-            </Button>
-            <Button
-              isIconOnly
-              variant="light"
-              as={Link}
-              href="https://twitter.com"
-              target="_blank"
-              className={getButtonStyles()}
-            >
-              <FiTwitter className="text-xl" />
-            </Button>
+
+            <Link href="https://github.com" target="_blank">
+              <Button isIconOnly variant="danger" className={getButtonStyles()}>
+                <FiGithub className="text-xl" />
+              </Button>
+            </Link>
+
+            <Link href="https://linkedin.com" target="_blank">
+              <Button isIconOnly variant="tertiary" className={getButtonStyles()}>
+                <FiLinkedin className="text-xl" />
+              </Button>
+            </Link>
+
+            <Link href="https://twitter.com" target="_blank">
+              <Button isIconOnly variant="secondary" className={getButtonStyles()}>
+                <FiTwitter className="text-xl" />
+              </Button>
+            </Link>
           </div>
 
           <div className="md:hidden flex gap-2 justify-self-end">
